@@ -35,8 +35,9 @@ const App = () => {
             },
           }
         );
-        if (!response.ok) throw Error("Network problem!");
-        const data = await response.json();
+        console.log(response)
+        
+        const data = response.data;
         setImages((prev) =>
           page === 1 ? data.results : [...prev, ...data.results]
         );
