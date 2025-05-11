@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
+import { ImagesIcon, ImageOffIcon } from "lucide-react";
 import axios from "axios";
 import SearchBar from "./components/SearchBar";
 import ImageGallery from "./components/ImageGallery";
 import ErrorMessage from "./components/ErrorMessage";
 import Loader from "./components/Loader";
 import LoadMoreBtn from "./components/LoadMoreBtn";
+import ImageModal from "./components/ImageModal";
+import Footer from "./components/Footer";
 
 const App = () => {
   const [query, setQuery] = useState("");
@@ -35,8 +38,7 @@ const App = () => {
             },
           }
         );
-        console.log(response)
-        
+
         const data = response.data;
         setImages((prev) =>
           page === 1 ? data.results : [...prev, ...data.results]
@@ -59,14 +61,42 @@ const App = () => {
   };
 
   const handleLoadMore = () => setPage((prev) => prev + 1);
-
+  const openModal = (image) => {
+    setCurrentImage(image);
+    setShowModal(true);
+  };
+  const closeModal = () => {
+    setShowModal(true);
+    setCurrentImage(null);
+  };
   return (
-    <div>
-      <SearchBar onSearch={handleSearchQuery} />
-      {error && <ErrorMessage message={error} />}
-      <ImageGallery images={images} onImageClick={null} />
-      {loading && <Loader />}
-      {images.length>0&& <LoadMoreBtn onClick={handleLoadMore}/>}
+    <div className="flex flex-col min-h-screen">
+      <div className="flex-grow">
+        <SearchBar onSearch={handleSearchQuery} />
+        {error && <ErrorMessage message={error} />}
+        {!query && images.length === 0 && (
+          <div className="flex flex-col items-center justify-center h-96">
+            <ImagesIcon className="w-24 h-24 mb-4 text-yellow-300" />
+            <p className="text-gray-500 text-lg">Start searching for images!</p>
+          </div>
+        )}
+        {query && images.length === 0 && !loading && (
+          <div className="flex flex-col items-center justify-center h-96">
+            <ImagesIcon className="w-24 h-24 mb-4 text-yellow-300" />
+            <p className="text-gray-500 text-lg">
+              No photos found for "{query}"
+            </p>
+          </div>
+        )}
+        {query && <ImageGallery images={images} onImageClick={openModal} />}
+        {loading && <Loader />}
+
+        <div className="flex justify-center py-7">
+          {images.length > 0 && <LoadMoreBtn onClick={handleLoadMore} />}
+        </div>
+        {showModal && <ImageModal image={currentImage} onClose={closeModal} />}
+      </div>
+      <Footer />
     </div>
   );
 };
