@@ -4,9 +4,8 @@ const ImageCard = ({ image, onClick }) => {
     <div onClick={onClick}>
       <img
         src={image.urls.small} // Use 'small' or 'regular' for better image quality
-        alt={image.alt_description || "Unsplash image"} // Use alt_description for better accessibility
+        alt={image.alt_description || "Unsplash image"} 
         loading="lazy"
-        style={{ width: "100%", height: "auto", borderRadius: "8px" }} // Optional styling
      
       />
     </div>
