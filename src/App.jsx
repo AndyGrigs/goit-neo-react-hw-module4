@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ImagesIcon, ImageOffIcon } from "lucide-react";
 import axios from "axios";
+import { Toaster } from "react-hot-toast";
 import SearchBar from "./components/SearchBar";
 import ImageGallery from "./components/ImageGallery";
 import ErrorMessage from "./components/ErrorMessage";
@@ -72,6 +73,7 @@ const App = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <div className="flex-grow">
+         <Toaster position="top-right" reverseOrder={false} />
         <SearchBar onSearch={handleSearchQuery} />
         {error && <ErrorMessage message={error} />}
         {!query && images.length === 0 && (
